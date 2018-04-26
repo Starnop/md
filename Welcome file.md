@@ -250,7 +250,7 @@ rtt min/avg/max/mdev = 0.041/0.055/0.068/0.012 ms
 
 - Because `kubeadm` still assumes docker as the only container runtime which can be used with kubernetes. When you use `kubeadm` to initialize the master node or join the minion node to the cluster, you may encounter the following error message:`[ERROR SystemVerification]: failed to get docker info: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?`. Use the flag `--skip-preflight-checks` to skip the check, like `kubeadm init --skip-preflight-checks`.
 
-- Kubernetes 1.10.0 has been released recently and you may install it by default.However, for the NOTE metioned above, Kubernetes 1.9.X is recommanded for current Pouch.In ubuntu, we could use `apt-cache madison kubelet` to search the Kubernetes version which is available, then specify the version when install it, like `apt-get install kubelet=1.9.4-00`.In centos, we could use `yum search --showduplicates kubelet`to search the Kubernetes version which is available, then specify the version when install it, like 
+- Kubernetes 1.10.0 has been released recently and you may install it by default.However, for the NOTE metioned above, Kubernetes 1.9.X is recommanded for current Pouch.In ubuntu, we could use `apt-cache madison kubelet` to search the Kubernetes version which is available, then specify the version when install it, like `apt-get install kubelet=1.9.4-00`.In centos, we could use `yum search --showduplicates kubelet`to search the Kubernetes version which is available, then specify the version when install it, like `yum -y install kubernetes-cni kubelet-1.9.4-0.x86_64 kubeadm-1.9.4-0.x86_64 kubectl-1.9.4-0.x86_64`
 
 - By default Pouch will not enable the CRI. If you'd like to deploy Kubernetes with Pouch, you should start pouchd with the configuration like `pouchd --enable-cri`.
 
@@ -259,5 +259,5 @@ rtt min/avg/max/mdev = 0.041/0.055/0.068/0.012 ms
 - Any other troubles? Make an issue to connect with us!
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTc1MDU2OTk3MywtMTAwNzExMjkwOF19
+eyJoaXN0b3J5IjpbMjEyNDIxOTczNiwtMTAwNzExMjkwOF19
 -->
