@@ -17,7 +17,7 @@ Updated: 2018.3.30
 
 ## Overview
 
-This document shows how to easily install a Kubernetes cluster with Pouch as the container runtime.
+This document shows how to easily install a Kubernetes cluster with Pouch as the container runtime in China.
 
 ![pouch_with_kubernetes](../static_files/pouch_with_kubernetes.png)
 
@@ -252,9 +252,10 @@ rtt min/avg/max/mdev = 0.041/0.055/0.068/0.012 ms
 
 - Kubernetes 1.10.0 has been released recently and you may install it by default.However, for the NOTE metioned above, Kubernetes 1.9.X is recommanded for current Pouch.
 
-	 In ubuntu, we could use `apt-cache madison kubelet` to search the Kubernetes version which is available, then specify the version when install it, like `apt-get -y install kubernetes-cni kubelet=1.9.4-00 kubeadm=1.9.4-00 kubectl=1.9.4-00`.
+	 In ubuntu, we could use `apt-cache madison kubelet` to search the Kubernetes version which is available, then specify the version when install it, like `apt-get -y install
+kubelet=1.9.4-00 kubeadm=1.9.4-00 kubectl=1.9.4-00`.
 
-	In centos, we could use `yum search --showduplicates kubelet`to search the Kubernetes version which is available, then specify the version when install it, like `yum -y install kubernetes-cni kubelet-1.9.4-0.x86_64 kubeadm-1.9.4-0.x86_64 kubectl-1.9.4-0.x86_64`
+	In centos, we could use `yum search --showduplicates kubelet` to search the Kubernetes version which is available, then specify the version when install it, like `yum -y install kubelet-1.9.4-0.x86_64 kubeadm-1.9.4-0.x86_64 kubectl-1.9.4-0.x86_64`
 
 - By default Pouch will not enable the CRI. If you'd like to deploy Kubernetes with Pouch, you should start pouchd with the configuration like `pouchd --enable-cri`.
 
@@ -263,5 +264,5 @@ rtt min/avg/max/mdev = 0.041/0.055/0.068/0.012 ms
 - Any other troubles? Make an issue to connect with us!
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTIwMjg2NTU3MCwtMTAwNzExMjkwOF19
+eyJoaXN0b3J5IjpbLTczMDI5ODgyMiwtMTAwNzExMjkwOF19
 -->
