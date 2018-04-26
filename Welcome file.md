@@ -1,146 +1,263 @@
-# Welcome to StackEdit!
+# Deploy Kubernetes With Pouch
 
-Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. If you have finished with me, you can just create new files by opening the **file explorer** on the left corner of the navigation bar.
+Updated: 2018.3.30
 
+- [Pouch deploying](#pouch-with-kubernetes-deploying)
+  - [Overview](#overview)
+  - [Restriction](#restriction)
+  - [Install and Configure](#install-and-configure)
+    - [Install Pouch](#install-pouch)
+    - [Install CNI](#install-cni)
+    - [Install Kubernetes Components](#install-kubernetes-components)
+    - [Setting up the master node](#setting-up-the-master-node)
+    - [Setting up the minion nodes](#setting-up-the-minion-nodes)
+    - [Setting up CNI network routes](#setting-up-cni-network-routes)
+  - [Run and Verify](#run-and-verify)
+  - [Troubleshooting](#troubleshooting)
 
-# Files
+## Overview
 
-StackEdit stores your files in your browser, which means all your files are automatically saved locally and are accessible **offline!**
+This document shows how to easily install a Kubernetes cluster with Pouch as the container runtime.
 
-## Create files and folders
+![pouch_with_kubernetes](../static_files/pouch_with_kubernetes.png)
 
-The file explorer is accessible using the button in left corner of the navigation bar. You can create a new file by clicking the **New file** button in the file explorer. You can also create folders by clicking the **New folder** button.
+## Restriction
 
-## Switch to another file
+Kubernetes: Version 1.9.X is recommanded.
 
-All your files are listed in the file explorer. You can switch from one to another by clicking a file in the list.
+NOTE: It will be failed to deploy with recent released Kubernetes 1.10.0. Because Kubernetes 1.10.0 has updated CRI from v1alpha1 to v1alpha2 which Pouch has not supported yet. We will try to full support CRI v1alpha1 first and then v1alpha2.
 
-## Rename a file
+Pouch: Version 0.3.0 is recommanded.
 
-You can rename the current file by clicking the file name in the navigation bar or by clicking the **Rename** button in the file explorer.
+## Install and Configure
 
-## Delete a file
+An all-in-one kubernetes cluster with pouch runtime could be deployed by running:
 
-You can delete the current file by clicking the **Remove** button in the file explorer. The file will be moved into the **Trash** folder and automatically deleted after 7 days of inactivity.
+```
+hack/kubernetes/allinone.sh
 
-## Export a file
-
-You can export the current file by clicking **Export to disk** in the menu. You can choose to export the file as plain Markdown, as HTML using a Handlebars template or as a PDF.
-
-
-# Synchronization
-
-Synchronization is one of the biggest features of StackEdit. It enables you to synchronize any file in your workspace with other files stored in your **Google Drive**, your **Dropbox** and your **GitHub** accounts. This allows you to keep writing on other devices, collaborate with people you share the file with, integrate easily into your workflow... The synchronization mechanism takes place every minute in the background, downloading, merging, and uploading file modifications.
-
-There are two types of synchronization and they can complement each other:
-
-- The workspace synchronization will sync all your files, folders and settings automatically. This will allow you to fetch your workspace on any other device.
-	> To start syncing your workspace, just sign in with Google in the menu.
-
-- The file synchronization will keep one file of the workspace synced with one or multiple files in **Google Drive**, **Dropbox** or **GitHub**.
-	> Before starting to sync files, you must link an account in the **Synchronize** sub-menu.
-
-## Open a file
-
-You can open a file from **Google Drive**, **Dropbox** or **GitHub** by opening the **Synchronize** sub-menu and clicking **Open from**. Once opened in the workspace, any modification in the file will be automatically synced.
-
-## Save a file
-
-You can save any file of the workspace to **Google Drive**, **Dropbox** or **GitHub** by opening the **Synchronize** sub-menu and clicking **Save on**. Even if a file in the workspace is already synced, you can save it to another location. StackEdit can sync one file with multiple locations and accounts.
-
-## Synchronize a file
-
-Once your file is linked to a synchronized location, StackEdit will periodically synchronize it by downloading/uploading any modification. A merge will be performed if necessary and conflicts will be resolved.
-
-If you just have modified your file and you want to force syncing, click the **Synchronize now** button in the navigation bar.
-
-> **Note:** The **Synchronize now** button is disabled if you have no file to synchronize.
-
-## Manage file synchronization
-
-Since one file can be synced with multiple locations, you can list and manage synchronized locations by clicking **File synchronization** in the **Synchronize** sub-menu. This allows you to list and remove synchronized locations that are linked to your file.
-
-
-# Publication
-
-Publishing in StackEdit makes it simple for you to publish online your files. Once you're happy with a file, you can publish it to different hosting platforms like **Blogger**, **Dropbox**, **Gist**, **GitHub**, **Google Drive**, **WordPress** and **Zendesk**. With [Handlebars templates](http://handlebarsjs.com/), you have full control over what you export.
-
-> Before starting to publish, you must link an account in the **Publish** sub-menu.
-
-## Publish a File
-
-You can publish your file by opening the **Publish** sub-menu and by clicking **Publish to**. For some locations, you can choose between the following formats:
-
-- Markdown: publish the Markdown text on a website that can interpret it (**GitHub** for instance),
-- HTML: publish the file converted to HTML via a Handlebars template (on a blog for example).
-
-## Update a publication
-
-After publishing, StackEdit keeps your file linked to that publication which makes it easy for you to re-publish it. Once you have modified your file and you want to update your publication, click on the **Publish now** button in the navigation bar.
-
-> **Note:** The **Publish now** button is disabled if your file has not been published yet.
-
-## Manage file publication
-
-Since one file can be published to multiple locations, you can list and manage publish locations by clicking **File publication** in the **Publish** sub-menu. This allows you to list and remove publication locations that are linked to your file.
-
-
-# Markdown extensions
-
-StackEdit extends the standard Markdown syntax by adding extra **Markdown extensions**, providing you with some nice features.
-
-> **ProTip:** You can disable any **Markdown extension** in the **File properties** dialog.
-
-
-## SmartyPants
-
-SmartyPants converts ASCII punctuation characters into "smart" typographic punctuation HTML entities. For example:
-
-|                |ASCII                          |HTML                         |
-|----------------|-------------------------------|-----------------------------|
-|Single backticks|`'Isn't this fun?'`            |'Isn't this fun?'            |
-|Quotes          |`"Isn't this fun?"`            |"Isn't this fun?"            |
-|Dashes          |`-- is en-dash, --- is em-dash`|-- is en-dash, --- is em-dash|
-
-
-## KaTeX
-
-You can render LaTeX mathematical expressions using [KaTeX](https://khan.github.io/KaTeX/):
-
-The *Gamma function* satisfying $\Gamma(n) = (n-1)!\quad\forall n\in\mathbb N$ is via the Euler integral
-
-$$
-\Gamma(z) = \int_0^\infty t^{z-1}e^{-t}dt\,.
-$$
-
-> You can find more information about **LaTeX** mathematical expressions [here](http://meta.math.stackexchange.com/questions/5020/mathjax-basic-tutorial-and-quick-reference).
-
-
-## UML diagrams
-
-You can render UML diagrams using [Mermaid](https://mermaidjs.github.io/). For example, this will produce a sequence diagram:
-
-```mermaid
-sequenceDiagram
-Alice ->> Bob: Hello Bob, how are you?
-Bob-->>John: How about you John?
-Bob--x Alice: I am good thanks!
-Bob-x John: I am good thanks!
-Note right of John: Bob thinks a long<br/>long time, so long<br/>that the text does<br/>not fit on a row.
-
-Bob-->Alice: Checking with John...
-Alice->John: Yes... John, how are you?
 ```
 
-And this will produce a flow chart:
+Please refer to [allinone](https://github.com/alibaba/pouch/blob/master/hack/kubernetes/allinone.sh) .
 
-```mermaid
-graph LR
-A[Square Rect] -- Link text --> B((Circle))
-A --> C(Round Rect)
-B --> D{Rhombus}
-C --> D
+### Install Pouch
+
+You can easily setup a basic Pouch environment, see [INSTALLATION.md](../../INSTALLATION.md).
+
+### Configure Pouch
+
+On Ubuntu 16.04+:
+
 ```
+sed -i 's/ExecStart=\/usr\/bin\/pouchd/ExecStart=\/usr\/bin\/pouchd --enable-cri=true/g' /usr/lib/systemd/system/pouch.service
+systemctl daemon-reload
+systemctl restart pouch
+```
+
+On CentOS 7:
+
+```
+sed -i 's/ExecStart=\/usr\/local\/bin\/pouchd/ExecStart=\/usr\/local\/bin\/pouchd --enable-cri=true/g' /lib/systemd/system/pouch.service
+systemctl daemon-reload
+systemctl restart pouch
+```
+
+### Install CNI
+
+On Ubuntu 16.04+:
+
+```
+apt-get update && apt-get install -y apt-transport-https
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
+deb http://apt.kubernetes.io/ kubernetes-xenial main
+EOF
+apt-get update
+apt-get install -y kubernetes-cni
+```
+
+On CentOS 7:
+
+```
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo 
+[kubernetes] 
+name=Kubernetes 
+baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64 
+enabled=1 
+gpgcheck=0 
+repo_gpgcheck=0 
+gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg
+	http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg 
+EOF
+setenforce 0
+yum install -y kubernetes-cni 
+```
+
+Configure CNI networks:
+
+- If you want to use CNI plugins like Flannel, Weave, Calico etc, please skip this section.
+- Otherwise, you can use **bridge** network plugin, it's the simplest way.
+  - Subnets should be different on different nodes. e.g. `10.244.1.0/24` for the master node and `10.244.2.0/24` for the first minion node.
+
+```sh
+mkdir -p /etc/cni/net.d
+cat >/etc/cni/net.d/10-mynet.conf <<-EOF
+{
+    "cniVersion": "0.3.0",
+    "name": "mynet",
+    "type": "bridge",
+    "bridge": "cni0",
+    "isGateway": true,
+    "ipMasq": true,
+    "ipam": {
+        "type": "host-local",
+        "subnet": "10.244.1.0/24",
+        "routes": [
+            { "dst": "0.0.0.0/0"  }
+        ]
+    }
+}
+EOF
+cat >/etc/cni/net.d/99-loopback.conf <<-EOF
+{
+    "cniVersion": "0.3.0",
+    "type": "loopback"
+}
+EOF
+```
+
+### Install Kubernetes Components
+
+On Ubuntu 16.04+:
+
+```sh
+apt-get install -y kubelet kubeadm kubectl
+```
+
+On CentOS 7:
+
+```sh
+yum install -y kubelet kubeadm kubectl
+```
+
+Configure kubelet with Pouch as its runtime:
+
+```sh
+sed -i '2 i\Environment="KUBELET_EXTRA_ARGS=--container-runtime=remote --container-runtime-endpoint=unix:///var/run/pouchcri.sock --image-service-endpoint=unix:///var/run/pouchcri.sock"' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
+systemctl daemon-reload
+```
+
+For more details, please check [install kubelet](https://kubernetes.io/docs/setup/independent/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl).
+
+### Setting up the master node
+
+For more detailed Kubernetes cluster installation, please check [Using kubeadm to Create a Cluster](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/)
+
+```
+kubeadm init
+```
+
+NOTE: If you want to use CNI plugin other than bridge, please check [Installing a pod network](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network).
+
+Optional: enable schedule pods on the master node
+
+```sh
+export KUBECONFIG=/etc/kubernetes/admin.conf
+kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-
+```
+
+### Setting up the minion nodes
+
+After initializing the master node, you may get the following prompt:
+
+```
+You can now join any number of machines by running the following on each node
+as root:
+
+  kubeadm join --token $token ${master_ip:port} --discovery-token-ca-cert-hash $ca-cert
+```
+
+Copy & Run it in all your minion nodes.
+
+### Setting up CNI network routes
+
+If your CNI plugin is bridge, you could use direct routes to connect the containers across multi-node.Suppose you have one master node and one minion node:
+
+```
+NODE   IP_ADDRESS   CONTAINER_CIDR
+master 10.148.0.1  10.244.1.0/24
+minion 10.148.0.2  10.244.2.0/24
+```
+
+Setting up routes:
+
+```
+# master node
+ip route add 10.244.2.0/24 via 10.148.0.2
+
+# minion node
+ip route add 10.244.1.0/24 via 10.148.0.1
+```
+
+## Run and Verify
+
+Create a deployment named `Pouch`:
+
+```sh
+# cat pouch.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pouch
+  labels:
+    pouch: pouch
+spec:
+  selector:
+    matchLabels:
+      pouch: pouch
+  template:
+    metadata:
+      labels:
+        pouch: pouch
+    spec:
+      containers:
+      - name: pouch
+        image: docker.io/library/busybox:latest
+
+# kubectl create -f pouch.yaml
+deployment "pouch" created
+```
+
+Confirm the pod of deployment is really running:
+
+```sh
+# kubectl get pods -o wide
+NAME                     READY     STATUS    RESTARTS   AGE       IP           NODE
+pouch-7dcd875d69-gq5r9   1/1       Running   0          44m       10.244.1.4   master
+# ping 10.244.1.4
+PING 10.244.1.4 (10.244.1.4) 56(84) bytes of data.
+64 bytes from 10.244.1.4: icmp_seq=1 ttl=64 time=0.065 ms
+64 bytes from 10.244.1.4: icmp_seq=2 ttl=64 time=0.068 ms
+64 bytes from 10.244.1.4: icmp_seq=3 ttl=64 time=0.041 ms
+64 bytes from 10.244.1.4: icmp_seq=4 ttl=64 time=0.047 ms
+^C
+--- 10.244.1.4 ping statistics ---
+4 packets transmitted, 4 received, 0% packet loss, time 3048ms
+rtt min/avg/max/mdev = 0.041/0.055/0.068/0.012 ms
+```
+
+## Troubleshooting
+
+- Because `kubeadm` still assumes docker as the only container runtime which can be used with kubernetes. When you use `kubeadm` to initialize the master node or join the minion node to the cluster, you may encounter the following error message:`[ERROR SystemVerification]: failed to get docker info: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?`. Use the flag `--skip-preflight-checks` to skip the check, like `kubeadm init --skip-preflight-checks`.
+
+- Kubernetes 1.10.0 has been released recently and you may install it by default.However, for the NOTE metioned above, Kubernetes 1.9.X is recommanded for current Pouch.In ubuntu, we could use `apt-cache madison kubelet` to search the Kubernetes version which is available, then specify the version when install it, like `apt-get install kubelet=1.9.4-00`.In centos, we could use `yum search --showduplicates kubelet`
+
+- By default Pouch will not enable the CRI. If you'd like to deploy Kubernetes with Pouch, you should start pouchd with the configuration like `pouchd --enable-cri`.
+
+- By default Pouch will use `registry.cn-hangzhou.aliyuncs.com/google-containers/pause-amd64:3.0` as the image of infra container. If you'd like use image other than that, you could start pouchd with the configuration like `pouchd --enable-cri --sandbox-image XXX`.
+
+- Any other troubles? Make an issue to connect with us!
+
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDE3MzcxMjg4XX0=
+eyJoaXN0b3J5IjpbLTEwMDcxMTI5MDhdfQ==
 -->
