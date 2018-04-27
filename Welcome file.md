@@ -10,7 +10,7 @@ Updated: 2018.3.30
     - [Install CNI](#install-cni)
     - [Install Kubernetes Components](#install-kubernetes-components)
     - [Setting up the master node](#setting-up-the-master-node)
-    - [Setting up ImageRepository](#setting-up-the-master-node)   
+    - [Setting up ImageRepository](#setting-up-imagerepository)   
     - [Setting up the minion nodes](#setting-up-the-minion-nodes)
     - [Setting up CNI network routes](#setting-up-cni-network-routes)
   - [Run and Verify](#run-and-verify)
@@ -272,5 +272,5 @@ U3NzIxNjEsMTQwMjc2OTIxLDY5MTEwNzQ0Miw5NDk2Mjk1NzUs
 LTkxOTE5MzQxMywtNzMwMjk4ODIyLC0xMDA3MTEyOTA4XX0=
 -->
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjMwNTk2ODcyXX0=
+eyJoaXN0b3J5IjpbLTgyNTI5OTUyNF19
 -->
