@@ -29,17 +29,6 @@ NOTE: It will be failed to deploy with recent released Kubernetes 1.10.0. Becaus
 
 Pouch: Version 0.3.0 is recommanded.
 
-## Install and Configure
-
-An all-in-one kubernetes cluster with pouch runtime could be deployed by running:
-
-```
-hack/kubernetes/allinone.sh
-
-```
-
-Please refer to [allinone](https://github.com/alibaba/pouch/blob/master/hack/kubernetes/allinone.sh) .
-
 ### Install Pouch
 
 You can easily setup a basic Pouch environment, see [INSTALLATION.md](../../INSTALLATION.md).
@@ -67,13 +56,11 @@ systemctl restart pouch
 On Ubuntu 16.04+:
 
 ```
-apt-get update && apt-get install -y apt-transport-https
-curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
-cat <<EOF > /etc/apt/sources.list.d/kubernetes.list
-deb http://apt.kubernetes.io/ kubernetes-xenial main
-EOF
-apt-get update
-apt-get install -y kubernetes-cni
+undefined
+CNI_VERSION="v0.6.0"
+mkdir -p /opt/cni/bin
+curl -L "https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-amd64-${CNI_VERSION}.tgz" | tar -C /opt/cni/bin -xz
+```
 ```
 
 On CentOS 7:
@@ -264,5 +251,6 @@ kubelet=1.9.4-00 kubeadm=1.9.4-00 kubectl=1.9.4-00`.
 - Any other troubles? Make an issue to connect with us!
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTczMDI5ODgyMiwtMTAwNzExMjkwOF19
+eyJoaXN0b3J5IjpbMTgxMzE1MDU5NywtNzMwMjk4ODIyLC0xMD
+A3MTEyOTA4XX0=
 -->
