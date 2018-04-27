@@ -143,6 +143,8 @@ systemctl daemon-reload
 
 For more details, please check [install kubelet](https://kubernetes.io/docs/setup/independent/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl).
 
+Create
+
 ### Setting up the master node
 
 For more detailed Kubernetes cluster installation, please check [Using kubeadm to Create a Cluster](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/)
@@ -258,7 +260,7 @@ kubelet=1.9.4-00 kubeadm=1.9.4-00 kubectl=1.9.4-00`.
 - Any other troubles? Make an issue to connect with us!
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTQwMjc2OTIxLDY5MTEwNzQ0Miw5NDk2Mj
-k1NzUsLTkxOTE5MzQxMywtNzMwMjk4ODIyLC0xMDA3MTEyOTA4
-XX0=
+eyJoaXN0b3J5IjpbMjAxMjM2NDg1NywxNDAyNzY5MjEsNjkxMT
+A3NDQyLDk0OTYyOTU3NSwtOTE5MTkzNDEzLC03MzAyOTg4MjIs
+LTEwMDcxMTI5MDhdfQ==
 -->
