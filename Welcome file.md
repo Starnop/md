@@ -143,7 +143,14 @@ systemctl daemon-reload
 
 For more details, please check [install kubelet](https://kubernetes.io/docs/setup/independent/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl).
 
-Create
+### Create kubeadm.conf
+
+    vim kubeadm.conf
+        apiVersion: kubeadm.k8s.io/v1alpha1
+    
+    kind: MasterConfiguration
+    
+    imageRepository: registry.cn-hangzhou.aliyuncs.com/google_containers
 
 ### Setting up the master node
 
@@ -260,7 +267,7 @@ kubelet=1.9.4-00 kubeadm=1.9.4-00 kubectl=1.9.4-00`.
 - Any other troubles? Make an issue to connect with us!
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMjAxMjM2NDg1NywxNDAyNzY5MjEsNjkxMT
-A3NDQyLDk0OTYyOTU3NSwtOTE5MTkzNDEzLC03MzAyOTg4MjIs
-LTEwMDcxMTI5MDhdfQ==
+eyJoaXN0b3J5IjpbODI3MDQ0NTEwLDE0MDI3NjkyMSw2OTExMD
+c0NDIsOTQ5NjI5NTc1LC05MTkxOTM0MTMsLTczMDI5ODgyMiwt
+MTAwNzExMjkwOF19
 -->
