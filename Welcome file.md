@@ -116,7 +116,15 @@ EOF
 On Ubuntu 16.04+:
 
 ```sh
-apt-get install -y kubelet kubeadm kubectl
+RELEASE="v1.9.4"
+mkdir -p /opt/bin
+cd /opt/bin
+curl -L --remote-name-all https://storage.googleapis.com/kubernetes-release/release/${RELEASE}/bin/linux/amd64/{kubeadm,kubelet,kubectl}
+chmod +x {kubeadm,kubelet,kubectl}
+
+curl -sSL "https://raw.githubusercontent.com/kubernetes/kubernetes/${RELEASE}/build/debs/kubelet.service" | sed "s:/usr/bin:/opt/bin:g" > /etc/systemd/system/kubelet.service
+mkdir -p /etc/systemd/system/kubelet.service.d
+curl -sSL "https://raw.githubusercontent.com/kubernetes/kubernetes/${RELEASE}/build/debs/10-kubeadm.conf" | sed "s:/usr/bin:/opt/bin:g" > /etc/systemd/system/kubelet.service.d/10-kubeadm.conf
 ```
 
 On CentOS 7:
@@ -249,6 +257,6 @@ kubelet=1.9.4-00 kubeadm=1.9.4-00 kubectl=1.9.4-00`.
 - Any other troubles? Make an issue to connect with us!
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTkxOTE5MzQxMywtNzMwMjk4ODIyLC0xMD
-A3MTEyOTA4XX0=
+eyJoaXN0b3J5IjpbOTQ5NjI5NTc1LC05MTkxOTM0MTMsLTczMD
+I5ODgyMiwtMTAwNzExMjkwOF19
 -->
