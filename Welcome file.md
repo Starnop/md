@@ -156,7 +156,7 @@ For more details, please check [install kubelet](https://kubernetes.io/docs/setu
 For more detailed Kubernetes cluster installation, please check [Using kubeadm to Create a Cluster](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/)
 
 ```
-kubeadm init
+kubeadm init --config kubeadm.conf
 ```
 
 NOTE: If you want to use CNI plugin other than bridge, please check [Installing a pod network](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network).
@@ -250,7 +250,7 @@ rtt min/avg/max/mdev = 0.041/0.055/0.068/0.012 ms
 
 ## Troubleshooting
 
-- Because `kubeadm` still assumes docker as the only container runtime which can be used with kubernetes. When you use `kubeadm` to initialize the master node or join the minion node to the cluster, you may encounter the following error message:`[ERROR SystemVerification]: failed to get docker info: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?`. Use the flag `--skip-preflight-checks` to skip the check, like `kubeadm init --skip-preflight-checks`.
+- Because `kubeadm` still assumes docker as the only container runtime which can be used with kubernetes. When you use `kubeadm` to initialize the master node or join the minion node to the cluster, you may encounter the following error message:`[ERROR SystemVerification]: failed to get docker info: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?`. Use the flag `--skip-preflight-checks` to skip the check, like `kubeadm init --ignore-preflight-errors=all`.
 
 - Kubernetes 1.10.0 has been released recently and you may install it by default.However, for the NOTE metioned above, Kubernetes 1.9.X is recommanded for current Pouch.
 
@@ -266,7 +266,7 @@ kubelet=1.9.4-00 kubeadm=1.9.4-00 kubectl=1.9.4-00`.
 - Any other troubles? Make an issue to connect with us!
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTIyMzcwMDIxNywxNDAyNzY5MjEsNjkxMT
+eyJoaXN0b3J5IjpbLTU2NDg1MjQ4OSwxNDAyNzY5MjEsNjkxMT
 A3NDQyLDk0OTYyOTU3NSwtOTE5MTkzNDEzLC03MzAyOTg4MjIs
 LTEwMDcxMTI5MDhdfQ==
 -->
