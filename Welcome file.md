@@ -56,11 +56,9 @@ systemctl restart pouch
 On Ubuntu 16.04+:
 
 ```
-undefined
 CNI_VERSION="v0.6.0"
 mkdir -p /opt/cni/bin
 curl -L "https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-amd64-${CNI_VERSION}.tgz" | tar -C /opt/cni/bin -xz
-```
 ```
 
 On CentOS 7:
@@ -251,6 +249,6 @@ kubelet=1.9.4-00 kubeadm=1.9.4-00 kubectl=1.9.4-00`.
 - Any other troubles? Make an issue to connect with us!
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMTgxMzE1MDU5NywtNzMwMjk4ODIyLC0xMD
+eyJoaXN0b3J5IjpbLTkxOTE5MzQxMywtNzMwMjk4ODIyLC0xMD
 A3MTEyOTA4XX0=
 -->
