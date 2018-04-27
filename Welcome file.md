@@ -130,8 +130,8 @@ curl -sSL "https://raw.githubusercontent.com/kubernetes/kubernetes/${RELEASE}/bu
 On CentOS 7:
 
 ```sh
-RELEASE="v1.9.4"
-yum -y install kubelet-1.9.4-0.x86_64 kubeadm-1.9.4-0.x86_64 kubectl-1.9.4-0.x86_64
+RELEASE="1.9.4-0.x86_64"
+yum -y install kubelet-${RELEASE} kubeadm-${RELEASE} kubectl-${RELEASE}
 ```
 
 Configure kubelet with Pouch as its runtime:
@@ -258,6 +258,7 @@ kubelet=1.9.4-00 kubeadm=1.9.4-00 kubectl=1.9.4-00`.
 - Any other troubles? Make an issue to connect with us!
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNjkxMTA3NDQyLDk0OTYyOTU3NSwtOTE5MT
-kzNDEzLC03MzAyOTg4MjIsLTEwMDcxMTI5MDhdfQ==
+eyJoaXN0b3J5IjpbMTQwMjc2OTIxLDY5MTEwNzQ0Miw5NDk2Mj
+k1NzUsLTkxOTE5MzQxMywtNzMwMjk4ODIyLC0xMDA3MTEyOTA4
+XX0=
 -->
