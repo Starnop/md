@@ -222,5 +222,7 @@ PouchContainer 为了保证代码的质量，对于测试工作还是给予高�
 # 参考资料
 
 http://labix.org/gocheck
+
 https://books.studygolang.com
+
 https://github.com/alibaba/pouch/blob/master/docs/test/test.md
