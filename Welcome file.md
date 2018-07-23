@@ -129,13 +129,13 @@ func TestImageRemove(t *testing.T) {
 + [storage/volume/ListVolumeName](https://github.com/alibaba/pouch/issues/1763)
 + [storage/volume/VolumePath](https://github.com/alibaba/pouch/issues/1762)
 + [storage/volume/DetachVolume](https://github.com/alibaba/pouch/issues/1761)
-+ [附加项]()
++ [附加项 add more unit-test for CRI](https://github.com/alibaba/pouch/issues/1756)
 
 
 
 
 注意：关于Volume相关的Unit Test需要Mock volume，请参考[该PR](https://github.com/alibaba/pouch/pull/1626)。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbODcxNjk5MTQ4LC0xMDMwNTQ4NDYsLTEwMz
-A1NDg0NiwtODI1Mjk5NTI0XX0=
+eyJoaXN0b3J5IjpbLTE5ODgyMzk3NTUsLTEwMzA1NDg0NiwtMT
+AzMDU0ODQ2LC04MjUyOTk1MjRdfQ==
 -->
