@@ -232,6 +232,6 @@ kubelet=1.9.4-00 kubeadm=1.9.4-00 kubectl=1.9.4-00`.
   
 - Any other troubles? Make an issue to connect with us!
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzk2MDY1NDkzLC0xMDMwNTQ4NDYsLTgyNT
-I5OTUyNF19
+eyJoaXN0b3J5IjpbLTEwMzA1NDg0NiwzOTYwNjU0OTMsLTEwMz
+A1NDg0NiwtODI1Mjk5NTI0XX0=
 -->
