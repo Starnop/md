@@ -1,237 +1,141 @@
+# PouchContainer Issue Guide
+必读文档
+[PouchContainer架构](https://github.com/alibaba/pouch/blob/master/docs/architecture.md)
+[贡献者指南](https://github.com/alibaba/pouch/blob/master/CONTRIBUTING.md)
+[代码风格指南](https://github.com/alibaba/pouch/blob/master/docs/contributions/code_styles.md)
 
-# Deploy Kubernetes With Pouch In The Domestic  
-  
-Updated: 2018.3.30  
-  
-- [Pouch deploying](#pouch-with-kubernetes-deploying)  
-  - [Overview](#overview)  
-  - [Restriction](#restriction)  
-  - [Install and Configure](#install-and-configure)  
-    - [Install Pouch](#install-pouch)  
-    - [Install CNI](#install-cni)  
-    - [Install Kubernetes Components](#install-kubernetes-components)  
-    - [Setting up the master node](#setting-up-the-master-node)  
-    - [Setting up ImageRepository](#setting-up-imagerepository)  
-    - [Setting up the minion nodes](#setting-up-the-minion-nodes)  
-    - [Setting up CNI network routes](#setting-up-cni-network-routes)  
-  - [Run and Verify](#run-and-verify)  
-  - [Troubleshooting](#troubleshooting)  
-  
-## Overview  
-  
-This document shows how to easily install a Kubernetes cluster with Pouch as the container runtime in the domestic.  
-  
-![pouch_with_kubernetes](../static_files/pouch_with_kubernetes.png)  
-  
-## Restriction  
-  
-Kubernetes: Version 1.9.X is recommanded.  
-  
-NOTE: It will be failed to deploy with recent released Kubernetes 1.10.0. Because Kubernetes 1.10.0 has updated CRI from v1alpha1 to v1alpha2 which Pouch has not supported yet. We will try to full support CRI v1alpha1 first and then v1alpha2.  
-  
-Pouch: Version 0.3.0 is recommanded.  
-  
-### Install Pouch  
-  
-You can easily setup a basic Pouch environment, see [INSTALLATION.md](../../INSTALLATION.md).  
-  
-### Configure Pouch  
-  
-On Ubuntu 16.04+:  
-  
-```  
-sed -i 's/ExecStart=\/usr\/bin\/pouchd/ExecStart=\/usr\/bin\/pouchd --enable-cri=true/g' /usr/lib/systemd/system/pouch.service  
-systemctl daemon-reload  
-systemctl restart pouch  
-```  
-  
-On CentOS 7:  
-  
-```  
-sed -i 's/ExecStart=\/usr\/local\/bin\/pouchd/ExecStart=\/usr\/local\/bin\/pouchd --enable-cri=true/g' /lib/systemd/system/pouch.service  
-systemctl daemon-reload  
-systemctl restart pouch  
-```  
-  
-### Install CNI  
-  
-On Ubuntu 16.04+:  
-  
-```  
-CNI_VERSION="v0.6.0"  
-mkdir -p /opt/cni/bin  
-curl -L "https://github.com/containernetworking/plugins/releases/download/${CNI_VERSION}/cni-plugins-amd64-${CNI_VERSION}.tgz" | tar -C /opt/cni/bin -xz  
-```  
-  
-On CentOS 7:  
-  
-```  
-cat <<EOF > /etc/yum.repos.d/kubernetes.repo  
-[kubernetes]  
-name=Kubernetes  
-baseurl=http://mirrors.aliyun.com/kubernetes/yum/repos/kubernetes-el7-x86_64  
-enabled=1  
-gpgcheck=0  
-repo_gpgcheck=0  
-gpgkey=http://mirrors.aliyun.com/kubernetes/yum/doc/yum-key.gpg  
-http://mirrors.aliyun.com/kubernetes/yum/doc/rpm-package-key.gpg  
-EOF  
-setenforce 0  
-yum install -y kubernetes-cni  
-```  
-  
-Configure CNI networks:  
-  
-- If you want to use CNI plugins like Flannel, Weave, Calico etc, please skip this section.  
-- Otherwise, you can use **bridge** network plugin, it's the simplest way.  
-  - Subnets should be different on different nodes. e.g. `10.244.1.0/24` for the master node and `10.244.2.0/24` for the first minion node.  
-  
-```sh  
-mkdir -p /etc/cni/net.d  
-cat >/etc/cni/net.d/10-mynet.conf <<-EOF  
-{  
- "cniVersion": "0.3.0", "name": "mynet", "type": "bridge", "bridge": "cni0", "isGateway": true, "ipMasq": true, "ipam": { "type": "host-local", "subnet": "10.244.1.0/24", "routes": [ { "dst": "0.0.0.0/0"  } ] }}  
-EOF  
-cat >/etc/cni/net.d/99-loopback.conf <<-EOF  
-{  
- "cniVersion": "0.3.0", "type": "loopback"}  
-EOF  
-```  
-  
-### Install Kubernetes Components  
-  
-On Ubuntu 16.04+:  
-  
-```sh  
-RELEASE="v1.9.4"  
-mkdir -p /opt/bin  
-cd /opt/bin  
-curl -L --remote-name-all https://storage.googleapis.com/kubernetes-release/release/${RELEASE}/bin/linux/amd64/{kubeadm,kubelet,kubectl}  
-chmod +x {kubeadm,kubelet,kubectl}  
-  
-curl -sSL "https://raw.githubusercontent.com/kubernetes/kubernetes/${RELEASE}/build/debs/kubelet.service" | sed "s:/usr/bin:/opt/bin:g" > /etc/systemd/system/kubelet.service  
-mkdir -p /etc/systemd/system/kubelet.service.d  
-curl -sSL "https://raw.githubusercontent.com/kubernetes/kubernetes/${RELEASE}/build/debs/10-kubeadm.conf" | sed "s:/usr/bin:/opt/bin:g" > /etc/systemd/system/kubelet.service.d/10-kubeadm.conf  
-```  
-  
-On CentOS 7:  
-  
-```sh  
-RELEASE="1.9.4-0.x86_64"  
-yum -y install kubelet-${RELEASE} kubeadm-${RELEASE} kubectl-${RELEASE}  
-```  
-  
-Configure kubelet with Pouch as its runtime:  
-  
-```sh  
-sed -i '2 i\Environment="KUBELET_EXTRA_ARGS=--container-runtime=remote --container-runtime-endpoint=unix:///var/run/pouchcri.sock --image-service-endpoint=unix:///var/run/pouchcri.sock"' /etc/systemd/system/kubelet.service.d/10-kubeadm.conf  
-systemctl daemon-reload  
-```  
-  
-For more details, please check [install kubelet](https://kubernetes.io/docs/setup/independent/install-kubeadm/#installing-kubeadm-kubelet-and-kubectl).  
-  
-### Setting up ImageRepository  
-  
- vim kubeadm.conf apiVersion: kubeadm.k8s.io/v1alpha1 kind: MasterConfiguration imageRepository: registry.cn-hangzhou.aliyuncs.com/google_containers  
-### Setting up the master node  
-  
-For more detailed Kubernetes cluster installation, please check [Using kubeadm to Create a Cluster](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/)  
-  
-```  
-kubeadm init --config kubeadm.conf  
-```  
-  
-NOTE: If you want to use CNI plugin other than bridge, please check [Installing a pod network](https://kubernetes.io/docs/setup/independent/create-cluster-kubeadm/#pod-network).  
-  
-Optional: enable schedule pods on the master node  
-  
-```sh  
-export KUBECONFIG=/etc/kubernetes/admin.conf  
-kubectl taint nodes --all node-role.kubernetes.io/master:NoSchedule-  
-```  
-  
-### Setting up the minion nodes  
-  
-After initializing the master node, you may get the following prompt:  
-  
-```  
-You can now join any number of machines by running the following on each node  
-as root:  
-  
- kubeadm join --token $token ${master_ip:port} --discovery-token-ca-cert-hash $ca-cert```  
-  
-Copy & Run it in all your minion nodes.  
-  
-### Setting up CNI network routes  
-  
-If your CNI plugin is bridge, you could use direct routes to connect the containers across multi-node.Suppose you have one master node and one minion node:  
-  
-```  
-NODE   IP_ADDRESS   CONTAINER_CIDR  
-master 10.148.0.1  10.244.1.0/24  
-minion 10.148.0.2  10.244.2.0/24  
-```  
-  
-Setting up routes:  
-  
-```  
-# master node  
-ip route add 10.244.2.0/24 via 10.148.0.2  
-  
-# minion node  
-ip route add 10.244.1.0/24 via 10.148.0.1  
-```  
-  
-## Run and Verify  
-  
-Create a deployment named `Pouch`:  
-  
-```sh  
-# cat pouch.yaml  
-apiVersion: apps/v1  
-kind: Deployment  
-metadata:  
- name: pouch labels: pouch: pouchspec:  
- selector: matchLabels: pouch: pouch template: metadata: labels: pouch: pouch spec: containers: - name: pouch image: docker.io/library/busybox:latest  
-# kubectl create -f pouch.yaml  
-deployment "pouch" created  
-```  
-  
-Confirm the pod of deployment is really running:  
-  
-```sh  
-# kubectl get pods -o wide  
-NAME                     READY     STATUS    RESTARTS   AGE       IP           NODE  
-pouch-7dcd875d69-gq5r9   1/1       Running   0          44m       10.244.1.4   master  
-# ping 10.244.1.4  
-PING 10.244.1.4 (10.244.1.4) 56(84) bytes of data.  
-64 bytes from 10.244.1.4: icmp_seq=1 ttl=64 time=0.065 ms  
-64 bytes from 10.244.1.4: icmp_seq=2 ttl=64 time=0.068 ms  
-64 bytes from 10.244.1.4: icmp_seq=3 ttl=64 time=0.041 ms  
-64 bytes from 10.244.1.4: icmp_seq=4 ttl=64 time=0.047 ms  
-^C  
---- 10.244.1.4 ping statistics ---  
-4 packets transmitted, 4 received, 0% packet loss, time 3048ms  
-rtt min/avg/max/mdev = 0.041/0.055/0.068/0.012 ms  
-```  
-  
-## Troubleshooting  
-  
-- Because `kubeadm` still assumes docker as the only container runtime which can be used with kubernetes. When you use `kubeadm` to initialize the master node or join the minion node to the cluster, you may encounter the following error message:`[ERROR SystemVerification]: failed to get docker info: Cannot connect to the Docker daemon at unix:///var/run/docker.sock. Is the docker daemon running?`. Use the flag `--skip-preflight-checks` to skip the check, like `kubeadm init --ignore-preflight-errors=all`.  
-  
-- Kubernetes 1.10.0 has been released recently and you may install it by default.However, for the NOTE metioned above, Kubernetes 1.9.X is recommanded for current Pouch.  
-  
-    In Ubuntu, we could use `apt-cache madison kubelet` to search the Kubernetes version which is available, then specify the version when install it, like `apt-get -y install  
-kubelet=1.9.4-00 kubeadm=1.9.4-00 kubectl=1.9.4-00`.  
-  
-   In Centos, we could use `yum search --showduplicates kubelet` to search the Kubernetes version which is available, then specify the version when install it, like `yum -y install kubelet-1.9.4-0.x86_64 kubeadm-1.9.4-0.x86_64 kubectl-1.9.4-0.x86_64`  
-  
-- By default Pouch will not enable the CRI. If you'd like to deploy Kubernetes with Pouch, you should start pouchd with the configuration like `pouchd --enable-cri`.  
-  
-- By default Pouch will use `registry.cn-hangzhou.aliyuncs.com/google-containers/pause-amd64:3.0` as the image of infra container. If you'd like use image other than that, you could start pouchd with the configuration like `pouchd --enable-cri --sandbox-image XXX`.  
-  
-- Any other troubles? Make an issue to connect with us!
+## 任务
+考虑到工作坊时间较紧张，PouchContainer团队为大家准备了一些单元测试用例待大家完成。下面会介绍如何为PouchContainer编写单元测试。
+
+### 测试工具
+
+Golang提供了方便好用的测试工具: [testing package](https://golang.org/pkg/testing/)，同时还有[go test](https://golang.org/cmd/go/#hdr-Test_packages)命令工具。
+
+在Golang的约定中，测试代码文件名以"_test.go"结尾，测试函数名以"Test"开头，接受`*testing.T`为参数。
+如
+
+```go
+// from https://golang.org/doc/code.html#Testing
+package stringutil
+
+import "testing"
+
+func TestReverse(t *testing.T) {
+    cases := []struct {
+        in, want string
+    }{
+        {"Hello, world", "dlrow ,olleH"},
+        {"Hello, 世界", "界世 ,olleH"},
+        {"", ""},
+    }
+    for _, c := range cases {
+        got := Reverse(c.in)
+        if got != c.want {
+            t.Errorf("Reverse(%q) == %q, want %q", c.in, got, c.want)
+        }
+    }
+}
+```
+
+执行`go test`命令，会运行该package下的所有测试函数。
+
+### Table Driven Test
+
+当被测试的函数有各式各样的输入场景时，我们可以采用 Table-Driven 的形式来组织我们的测试用例，（有兴趣可以了解一下 [go tests](https://github.com/cweill/gotests) 框架）如接下来的代码所示。Table-Driven 采用数组的方式来组织测试用例，并通过循环执行的方式来验证函数的正确性。[参考文档](https://github.com/golang/go/wiki/TableDrivenTests)
+
+```go
+// from https://golang.org/doc/code.html#Testing
+package stringutil
+
+import "testing"
+
+func TestReverse(t *testing.T) {
+    cases := []struct {
+        in, want string
+    }{
+        {"Hello, world", "dlrow ,olleH"},
+        {"Hello, 世界", "界世 ,olleH"},
+        {"", ""},
+    }
+    for _, c := range cases {
+        got := Reverse(c.in)
+        if got != c.want {
+            t.Errorf("Reverse(%q) == %q, want %q", c.in, got, c.want)
+        }
+    }
+}
+```
+
+### Mock 模拟外部依赖
+
+许多函数的运行结果是依赖于当时的环境状态的，可能依赖于存储的数据、网络状态。在测试时通常会模拟这些状态，hook真实处理方，直接返回预设的数据。
+
+以PouchContainer的client为例，client函数执行的结果与server的状态有关，这时我们直接hook[http.Client](https://golang.org/pkg/net/http/#Client)的Transport方法，模拟了server对于client请求的响应。
+
+```go
+// https://github.com/alibaba/pouch/blob/master/client/client_mock_test.go#L12-L22
+type transportFunc func(*http.Request) (*http.Response, error)
+
+func (transFunc transportFunc) RoundTrip(req *http.Request) (*http.Response, error) {
+        return transFunc(req)
+}
+
+func newMockClient(handler func(*http.Request) (*http.Response, error)) *http.Client {
+        return &http.Client{
+                Transport: transportFunc(handler),
+        }
+}
+
+// https://github.com/alibaba/pouch/blob/master/client/image_remove_test.go
+func TestImageRemove(t *testing.T) {
+        expectedURL := "/images/image_id"
+
+        httpClient := newMockClient(func(req *http.Request) (*http.Response, error) {
+                if !strings.HasPrefix(req.URL.Path, expectedURL) {
+                        return nil, fmt.Errorf("expected URL '%s', got '%s'", expectedURL, req.URL)
+                }
+                if req.Method != "DELETE" {
+                        return nil, fmt.Errorf("expected DELETE method, got %s", req.Method)
+                }
+
+                return &http.Response{
+                        StatusCode: http.StatusNoContent,
+                        Body:       ioutil.NopCloser(bytes.NewReader([]byte(""))),
+                }, nil
+        })
+
+        client := &APIClient{
+                HTTPCli: httpClient,
+        }
+
+        err := client.ImageRemove(context.Background(), "image_id", false)
+        if err != nil {
+                t.Fatal(err)
+        }
+}
+```
+
+### 持续集成
+
+为了保障PouchContainer项目的代码质量，PouchContainer的持续集成(Continuous integration)包含了代码风格检查、shellcheck、拼写检查、单元测试、集成测试等检查。在开发者提交PR后，会自动运行CI，没有通过检查的代码将不具有合入的资格。
+
+建议开发者在本地运行相关脚本自检，以减少线上测试的负担。具体检查方法见 [.circleci/config.yml](https://github.com/alibaba/pouch/blob/master/.circleci/config.yml)
+
+### 262期百技工作坊推荐完成顺序
+
++ [daemon/config/config.go: getConflictConfigurations](https://github.com/alibaba/pouch/issues/1759)
++ [daemon/config/config.go: getUnknownFlags](https://github.com/alibaba/pouch/issues/1758)
++ [ctrd/image\_proxy_util.go: useProxy](https://github.com/alibaba/pouch/issues/1760)
++ [storage/volume/ListVolumeName](https://github.com/alibaba/pouch/issues/1763)
++ [storage/volume/VolumePath](https://github.com/alibaba/pouch/issues/1762)
++ [storage/volume/DetachVolume](https://github.com/alibaba/pouch/issues/1761)
++ [附加项]()
+
+
+
+
+注意：关于Volume相关的Unit Test需要Mock volume，请参考[该PR](https://github.com/alibaba/pouch/pull/1626)。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbLTEwMzA1NDg0NiwzOTYwNjU0OTMsLTEwMz
+eyJoaXN0b3J5IjpbODcxNjk5MTQ4LC0xMDMwNTQ4NDYsLTEwMz
 A1NDg0NiwtODI1Mjk5NTI0XX0=
 -->
