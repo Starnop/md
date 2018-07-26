@@ -137,6 +137,7 @@ func TestImageRemove(t *testing.T) {
 
 注意：关于Volume相关的Unit Test需要Mock volume，请参考[该PR](https://github.com/alibaba/pouch/pull/1626)。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbMzM5MDExMzYsNDIxNzA2NjU5LC0xMDMwNT
-Q4NDYsLTEwMzA1NDg0NiwtODI1Mjk5NTI0XX0=
+eyJoaXN0b3J5IjpbNDIxNzA2NjU5LDMzOTAxMTM2LDQyMTcwNj
+Y1OSwtMTAzMDU0ODQ2LC0xMDMwNTQ4NDYsLTgyNTI5OTUyNF19
+
 -->
