@@ -42,7 +42,7 @@ func TestReverse(t *testing.T) {
 
 ### Table Driven Test
 
-当被测试的函数有各式各样的输入场景时，我们可以采用 Table-Driven 的形式来组织我们的测试用例，（有兴趣可以了解一下 [go tests](https://github.com/cweill/gotests) 框架）如接下来的代码所示。Table-Driven 采用数组的方式来组织测试用例，并通过循环执行的方式来验证函数的正确性。[参考文档](https://github.com/golang/go/wiki/TableDrivenTests)
+当被测试的函数有各式各样的输入场景时，我们可以采用 Table-Driven 的形式来组织我们的测试用例，（有兴趣可以了解一下 [go tests](https://github.com/cweill/gotests) 框架）如接下来的代码所示。Table-Driven 采用数组的方式来组织测试用例，并通过循环执行的方式来验证函数的正确性。[TableDrivenTests 参考文档](https://github.com/golang/go/wiki/TableDrivenTests)
 
 ```go
 // from https://golang.org/doc/code.html#Testing
@@ -122,22 +122,21 @@ func TestImageRemove(t *testing.T) {
 
 建议开发者在本地运行相关脚本自检，以减少线上测试的负担。具体检查方法见 [.circleci/config.yml](https://github.com/alibaba/pouch/blob/master/.circleci/config.yml)
 
-### 262期百技工作坊推荐完成顺序
+### 264期百技工作坊测试 issues
 
-+ [daemon/config/config.go: getConflictConfigurations](https://github.com/alibaba/pouch/issues/1759)
-+ [daemon/config/config.go: getUnknownFlags](https://github.com/alibaba/pouch/issues/1758)
-+ [ctrd/image\_proxy_util.go: useProxy](https://github.com/alibaba/pouch/issues/1760)
-+ [storage/volume/ListVolumeName](https://github.com/alibaba/pouch/issues/1763)
-+ [storage/volume/VolumePath](https://github.com/alibaba/pouch/issues/1762)
-+ [storage/volume/DetachVolume](https://github.com/alibaba/pouch/issues/1761)
-+ [附加项 add more unit-test for CRI](https://github.com/alibaba/pouch/issues/1756)
-
-
++ [add unit-test for apis/opts/portbindings.go areas/test](https://github.com/alibaba/pouch/issues/1905)
++ [add unit-test for apis/opts/ports.go areas/test](https://github.com/alibaba/pouch/issues/1906)
++ [add unit-test for updateCreateConfig areas/test](https://github.com/alibaba/pouch/issues/1916)
++ [add unit-test for toCriSandbox areas/test](https://github.com/alibaba/pouch/issues/1915)
++ [add unit-test for imageToCriImage areas/test](https://github.com/alibaba/pouch/issues/1914)
++ [add unit-test for getAppArmorSecurityOpts&getSeccompSecurityOpts areas/test](https://github.com/alibaba/pouch/issues/1913)
++ [add unit-test for getSELinuxSecurityOpts areas/test](https://github.com/alibaba/pouch/issues/1912)
++ [add unit-test for modifyContainerNamespaceOptions](https://github.com/alibaba/pouch/issues/1911)
 
 
 注意：关于Volume相关的Unit Test需要Mock volume，请参考[该PR](https://github.com/alibaba/pouch/pull/1626)。
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDIxNzA2NjU5LDMzOTAxMTM2LDQyMTcwNj
-Y1OSwtMTAzMDU0ODQ2LC0xMDMwNTQ4NDYsLTgyNTI5OTUyNF19
-
+eyJoaXN0b3J5IjpbMTgzMTE3MDU3Nyw0MjE3MDY2NTksNDIxNz
+A2NjU5LC0xMDMwNTQ4NDYsLTEwMzA1NDg0NiwtODI1Mjk5NTI0
+XX0=
 -->
