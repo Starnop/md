@@ -153,7 +153,5 @@ In fact, before the introduction of CRI, Kubernetes handled the IO in the same w
 * [CRI Streaming Requests Design Doc](https://docs.google.com/document/d/1OE_QoInPlVCK9rMAx9aybRmgFiVjHpJCHI9LrfdNM_s/edit#)
 
 <!--stackedit_data:
-eyJoaXN0b3J5IjpbNDg0NDcyMDI0LDQyMTcwNjY1OSw0MjE3MD
-Y2NTksLTEwMzA1NDg0NiwtMTAzMDU0ODQ2LC04MjUyOTk1MjRd
-fQ==
+eyJoaXN0b3J5IjpbNDg0NDcyMDI0XX0=
 -->
